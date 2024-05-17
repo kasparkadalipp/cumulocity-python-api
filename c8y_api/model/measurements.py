@@ -401,6 +401,33 @@ class Measurements(CumulocityResource):
         measurement.c8y = self.c8y  # inject c8y connection into instance
         return measurement
 
+    def get_count(
+            self,
+            type: str = None,
+            source: str | int = None,
+            fragment: str = None,
+            value: str = None,
+            series: str = None,
+            before: str | datetime = None,
+            after: str | datetime = None,
+            min_age: timedelta = None,
+            max_age: timedelta = None,
+            reverse: bool = None,
+    ) -> int:
+        """Calculate the number of potential results of a database query.
+
+        This function is a special variant of the select function. Only
+        the number of potential results returned.
+
+        Returns:
+            Number of potential results
+        """
+        base_query = self._build_base_query(type=type, source=source, fragment=fragment,
+                                            valueFragmentType=value, valueFragmentSeries=series,
+                                            before=before, after=after, min_age=min_age, max_age=max_age,
+                                            reverse=reverse, page_size=1)
+        return self._get_count(base_query)
+
     def select(
             self,
             type: str = None,

@@ -249,6 +249,28 @@ class Events(CumulocityResource):
         event_object.c8y = self.c8y  # inject c8y connection into instance
         return event_object
 
+    def get_count(self, type: str = None, source: str = None, fragment: str = None,
+               before: str | datetime = None, after: str | datetime = None,
+               created_before: str | datetime = None, created_after: str | datetime = None,
+               updated_before: str | datetime = None, updated_after: str | datetime = None,
+               min_age: timedelta = None, max_age: timedelta = None,
+               reverse: bool = False) -> int:
+        """Calculate the number of potential results of a database query.
+
+        This function is a special variant of the select function. Only
+        the number of potential results returned.
+
+        Returns:
+            Number of potential results
+        """
+        base_query = self._build_base_query(type=type, source=source, fragment=fragment,
+                                            before=before, after=after,
+                                            created_before=created_before, created_after=created_after,
+                                            updated_before=updated_before, updated_after=updated_after,
+                                            min_age=min_age, max_age=max_age,
+                                            reverse=reverse, page_size=1)
+        return self._get_count(base_query)
+
     def select(self, type: str = None, source: str = None, fragment: str = None,  # noqa (type)
                before: str | datetime = None, after: str | datetime = None,
                created_before: str | datetime = None, created_after: str | datetime = None,
